@@ -1,4 +1,4 @@
-package com.morimoku.project_popular_movies1;
+package com.morimoku.project_popular_movies2;
 
 import android.net.Uri;
 
@@ -9,7 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class NetworkUtils {
+public class
+NetworkUtils {
 
 
     final static String THEMOVIEDB_BASE_URL = "https://api.themoviedb.org/3/movie";

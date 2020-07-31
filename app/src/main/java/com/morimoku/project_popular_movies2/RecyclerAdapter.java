@@ -1,4 +1,4 @@
-package com.morimoku.project_popular_movies1;
+package com.morimoku.project_popular_movies2;
 
 import android.content.Context;
 import android.view.LayoutInflater;

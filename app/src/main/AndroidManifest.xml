@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.morimoku.project_popular_movies1">
+    package="com.morimoku.project_popular_movies2">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
