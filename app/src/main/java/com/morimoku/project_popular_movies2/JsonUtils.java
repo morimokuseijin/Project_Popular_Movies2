@@ -54,7 +54,7 @@ public class JsonUtils {
     }
     public static Review[] ReviewJSONParse(Context context ,String json) throws JSONException{
 
-        final String PARAMS_REVIEWS = "result";
+        final String PARAMS_REVIEWS = "results";
         final String PARAMS_AUTHOR = "author";
         final String PARAMS_CONTENT = "content";
 

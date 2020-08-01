@@ -1,6 +1,7 @@
 package com.morimoku.project_popular_movies2;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,6 +26,7 @@ public final class UrlFactory {
         URL url = null;
         try {
             url = new URL(builtUri.toString());
+            Log.v("Review_URL", String.valueOf(url));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
