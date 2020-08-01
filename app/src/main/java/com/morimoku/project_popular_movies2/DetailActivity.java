@@ -43,7 +43,7 @@ public class DetailActivity extends AppCompatActivity {
         mMovieReleaseDisplay  = findViewById(R.id.release_date);
         mMoviePlotSynopsisDisplay = findViewById(R.id.plot_synopsis);
 
-        mRecyclerViewMovieDetail = findViewById(R.id.recyclerview_movies);
+        mRecyclerViewMovieDetail = findViewById(R.id.recyclerview_movie_detail);
 
         id = getIntent().getIntExtra("id",0);
         String poster = getIntent().getStringExtra("poster");
@@ -63,14 +63,14 @@ public class DetailActivity extends AppCompatActivity {
                 .error(R.drawable.ic_launcher_foreground)
                 .into(mMoviePosterDisplay);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerViewMovieDetail.setLayoutManager(linearLayoutManager);
 
         mRecyclerViewMovieDetail.setHasFixedSize(true);
         
         mRecyclerViewMovieDetail.setAdapter(mRecyclerDetailAdapter);
         
-        loadVideoData(); //TODO: Will have to add function to load data of video reputation of this video
+        //loadVideoData(); //TODO: Will have to add function to load data of video reputation of this video
         loadReviewData();
     }
 

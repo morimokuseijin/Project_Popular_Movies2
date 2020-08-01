@@ -26,9 +26,10 @@ public class JsonUtils {
 
 
         for (int i = 0; i< moviesArray.length();i++){
-            String id,poster_path,vote_average,overview,release_date,title;
+            String poster_path,vote_average,overview,release_date,title;
+            int id;
             Movie movie = new Movie();
-            id= moviesArray.getJSONObject(i).optString(Id);
+            id= moviesArray.getJSONObject(i).optInt(Id);
             poster_path = moviesArray.getJSONObject(i).optString(POSTER_PATH);
             title = moviesArray.getJSONObject(i).optString(ORIGINAL_TITLE);
             release_date = moviesArray.getJSONObject(i).optString(RELEASE_DATE);

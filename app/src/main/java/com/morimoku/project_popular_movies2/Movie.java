@@ -1,10 +1,8 @@
 package com.morimoku.project_popular_movies2;
 
-import java.util.List;
-
 public class Movie {
 
-    private String movieId;
+    private int movieId;
     private String movieTitle;
     private String movieReleaseDate;
     private String movieVoteAverage;
@@ -15,7 +13,7 @@ public class Movie {
 
     }
 
-    public Movie(String movieId, String movieTitle, String movieReleaseDate, String movieVoteAverage, String movieOverview, String moviePosterPath) {
+    public Movie(int movieId, String movieTitle, String movieReleaseDate, String movieVoteAverage, String movieOverview, String moviePosterPath) {
         this.movieId = movieId;
         this.movieTitle = movieTitle ;
         this.movieReleaseDate = movieReleaseDate;
@@ -23,11 +21,11 @@ public class Movie {
         this.movieOverview = movieOverview;
         this.moviePosterPath = moviePosterPath;
     }
-    public String getMovieId() {
+    public int getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(String movieId) {
+    public void setMovieId(int movieId) {
         this.movieId = movieId;
     }
 

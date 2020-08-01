@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAdapter.RecyclerDetailAdapterHolder>{
 private Review[] mReviewData;
+public TextView mDetailTextView = null;
+public TextView mAuthorList = null;
 
     public RecyclerDetailAdapter(Review[] reviews){
         mReviewData = reviews;
@@ -18,11 +20,11 @@ private Review[] mReviewData;
 
 
     public class RecyclerDetailAdapterHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public final TextView mDetailTextView;
 
         public RecyclerDetailAdapterHolder(@NonNull View itemView) {
             super(itemView);
             mDetailTextView = itemView.findViewById(R.id.tv_detail_list);
+            mAuthorList = itemView.findViewById(R.id.tv_author_list);
         }
 
         @Override
@@ -43,6 +45,11 @@ private Review[] mReviewData;
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerDetailAdapterHolder holder, int position) {
+        String AuthorBind = mReviewData[position].getAuthor();
+        String ReviewBind = mReviewData[position].getContent();
+
+        mDetailTextView.setText(ReviewBind);
+        mAuthorList.setText(AuthorBind);
 
     }
 
@@ -51,6 +58,10 @@ private Review[] mReviewData;
 
     @Override
     public int getItemCount() {
-        return 0;
+
+       if (null == mReviewData) {
+           return 0;
+       }
+    return mReviewData.length;
     }
 }

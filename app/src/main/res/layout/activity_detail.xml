@@ -111,6 +111,8 @@
             android:id="@+id/recyclerview_movie_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="84dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/plot_synopsis">
 
         </androidx.recyclerview.widget.RecyclerView>
