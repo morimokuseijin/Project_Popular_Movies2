@@ -51,5 +51,31 @@ public class JsonUtils {
         return movieResults;
 
     }
+    public static Review[] ReviewJSONParse(Context context ,String json) throws JSONException{
+
+        final String PARAMS_REVIEWS = "result";
+        final String PARAMS_AUTHOR = "author";
+        final String PARAMS_CONTENT = "content";
+
+        JSONObject reviewJSON = new JSONObject(json);
+        JSONArray reviewArray = reviewJSON.getJSONArray(PARAMS_REVIEWS);
+        Review[] reviewResult = new Review[reviewArray.length()];
+
+        for (int i = 0; i< reviewArray.length();i++){
+            String review_author, review_content;
+
+            Review review = new Review();
+
+            review_author = reviewArray.getJSONObject(i).optString(PARAMS_AUTHOR);
+            review_content = reviewArray.getJSONObject(i).optString(PARAMS_CONTENT);
+
+            review.setAuthor(review_author);
+            review.setContent(review_content);
+
+            reviewResult[i] = review;
+        }
+
+        return reviewResult;
+    }
 
 }

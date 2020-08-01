@@ -10,9 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAdapter.RecyclerDetailAdapterHolder>{
+private Review[] mReviewData;
 
-
-    public RecyclerDetailAdapter(){}
+    public RecyclerDetailAdapter(Review[] reviews){
+        mReviewData = reviews;
+    }
 
 
     public class RecyclerDetailAdapterHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -20,7 +22,7 @@ public class RecyclerDetailAdapter extends RecyclerView.Adapter<RecyclerDetailAd
 
         public RecyclerDetailAdapterHolder(@NonNull View itemView) {
             super(itemView);
-            mDetailTextView = (TextView)itemView.findViewById(R.id.tv_detail_list);
+            mDetailTextView = itemView.findViewById(R.id.tv_detail_list);
         }
 
         @Override
