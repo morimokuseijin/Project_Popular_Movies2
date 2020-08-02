@@ -21,6 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.morimoku.project_popular_movies2"
+            android:name=".FavouritesVideo"
+            android:exported="true"/>
     </application>
+
 
 </manifest>

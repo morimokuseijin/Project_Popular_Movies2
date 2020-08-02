@@ -2,8 +2,10 @@ package com.morimoku.project_popular_movies2;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +48,13 @@ public class DetailActivity extends AppCompatActivity {
         mMoviePlotSynopsisDisplay = findViewById(R.id.plot_synopsis);
         mRecyclerViewMovieDetail = findViewById(R.id.recyclerview_movie_detail);
         mFloatingActionButton = findViewById(R.id.fabFavourite);
+
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DetailActivity.this,"You have clicked it",Toast.LENGTH_LONG).show();
+            }
+        });
 
         id = getIntent().getIntExtra("id",0);
         String poster = getIntent().getStringExtra("poster");
