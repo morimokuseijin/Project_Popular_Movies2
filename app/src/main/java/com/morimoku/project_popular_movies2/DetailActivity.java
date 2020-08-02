@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -29,6 +30,7 @@ public class DetailActivity extends AppCompatActivity {
     final static String API_KEY_QUERY_PARAM = "api_key";
     private int id = 0;
     private Review[] jsonReviewData;
+    FloatingActionButton mFloatingActionButton;
 
 
 
@@ -42,8 +44,8 @@ public class DetailActivity extends AppCompatActivity {
         mMovieRateDisplay = findViewById(R.id.rate);
         mMovieReleaseDisplay  = findViewById(R.id.release_date);
         mMoviePlotSynopsisDisplay = findViewById(R.id.plot_synopsis);
-
         mRecyclerViewMovieDetail = findViewById(R.id.recyclerview_movie_detail);
+        mFloatingActionButton = findViewById(R.id.fabFavourite);
 
         id = getIntent().getIntExtra("id",0);
         String poster = getIntent().getStringExtra("poster");
