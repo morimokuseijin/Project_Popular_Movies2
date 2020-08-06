@@ -15,9 +15,10 @@ public class DatabaseSupport extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String SQL_CREATES_FAVOURITES_DATABASE = " CREATE TABLE "+ FavouritesVideo.FavoritesContract.FavouritesAdd.TABLE_NAME + "("
+        final String SQL_CREATES_FAVOURITES_DATABASE = " CREATE TABLE "+
+                FavouritesVideo.FavoritesContract.FavouritesAdd.TABLE_NAME + "("
                 + FavouritesVideo.FavoritesContract.FavouritesAdd._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID + " TEXT NOT NULL,"
+                + FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID + " INTEGER NOT NULL,"
                 + FavouritesVideo.FavoritesContract.FavouritesAdd.COL_NAME +  " TEXT NOT NULL,"
                 + FavouritesVideo.FavoritesContract.FavouritesAdd.COL_POSTER + " TEXT NOT NULL,"
                 + FavouritesVideo.FavoritesContract.FavouritesAdd.COL_RATE + " TEXT NOT NULL,"

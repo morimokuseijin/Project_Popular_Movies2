@@ -1,5 +1,9 @@
 package com.morimoku.project_popular_movies2;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -33,6 +37,20 @@ public class DetailActivity extends AppCompatActivity {
     private int id = 0;
     private Review[] jsonReviewData;
     FloatingActionButton mFloatingActionButton;
+    String[] mProjection =
+            {
+                    FavouritesVideo.FavoritesContract.FavouritesAdd._ID,
+                    FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID
+            };
+    private String mSelectionClause;
+    private String[] mSelectionArgs = {""};
+    private String title = "";
+    private String poster = "";
+    private String rate = "";
+    private String release = "";
+    private String overview = "";
+    Uri mNewUri;
+
 
 
 
@@ -52,7 +70,15 @@ public class DetailActivity extends AppCompatActivity {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DetailActivity.this,"You have clicked it",Toast.LENGTH_LONG).show();
+                if (isMovieFavourites(String.valueOf(id))){
+                    removeFavourites(String.valueOf(id));
+                    mFloatingActionButton.setImageResource(R.drawable.ic_android_favourite);
+                }else {
+                    addToFavourites(title,id,poster,rate,release,overview);
+                    Context context = getApplicationContext();
+                    Toast.makeText(context,"This movie was added to your favourites list",Toast.LENGTH_LONG).show();
+                    mFloatingActionButton.setImageResource(R.drawable.ic_android_favourite_pressed);
+                }
             }
         });
 
@@ -85,6 +111,18 @@ public class DetailActivity extends AppCompatActivity {
         loadReviewData();
     }
 
+    private void removeFavourites(String id) {
+        mSelectionClause = FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID + "LIKE ?";
+        String[] selectionArgs = new String[]{id};
+
+        getContentResolver().delete(
+                FavouritesVideo.FavoritesContract.FavouritesAdd.CONTENT_URI,
+                mSelectionClause,
+                selectionArgs
+        );
+
+    }
+
     private void loadReviewData() {
     String reviewId = String.valueOf(id);
     new FetchReview().execute(reviewId);
@@ -93,6 +131,43 @@ public class DetailActivity extends AppCompatActivity {
 
 
     private void loadVideoData() {
+
+    }
+    private void addToFavourites(String name, int id, String poster, String rate, String release, String overview){
+
+        ContentValues mContentValues = new ContentValues();
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID,id);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_NAME,name);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_POSTER,poster);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_RATE,rate);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_RELEASE,release);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_OVERVIEW,overview);
+
+        mNewUri = getContentResolver().insert(
+                FavouritesVideo.FavoritesContract.FavouritesAdd.CONTENT_URI,
+                mContentValues
+        );
+
+
+
+    }
+
+    public boolean isMovieFavourites(String id){
+        mSelectionClause = FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID + " = ?";
+        mSelectionArgs[0] =id;
+        Cursor mCursor = getContentResolver().query(
+                FavouritesVideo.FavoritesContract.FavouritesAdd.CONTENT_URI,
+                mProjection,
+                mSelectionClause,
+                mSelectionArgs,
+                null);
+        if (mCursor.getCount() <= 0){
+            mCursor.close();
+            return false;
+        }
+        mCursor.close();
+        return true;
+
 
     }
 
