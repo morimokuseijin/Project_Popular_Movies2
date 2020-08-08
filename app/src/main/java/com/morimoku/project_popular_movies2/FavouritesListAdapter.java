@@ -80,6 +80,7 @@ public class FavouritesListAdapter extends RecyclerView.Adapter <FavouritesListA
         public FavouritesViewAdapter(@NonNull View itemView) {
             super(itemView);
             mFavourites = (ImageView) itemView.findViewById(R.id.movie_ranking);
+            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -101,7 +102,7 @@ public class FavouritesListAdapter extends RecyclerView.Adapter <FavouritesListA
             startNewActivity.putExtra("rate",rate);
             startNewActivity.putExtra("release",release);
             startNewActivity.putExtra("overview",overview);
-            startNewActivity.putExtra("id",id);
+            startNewActivity.putExtra("id",movieId);
 
             context.startActivity(startNewActivity);
 

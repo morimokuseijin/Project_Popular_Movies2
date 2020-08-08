@@ -15,7 +15,8 @@
             android:name=".FavouritesDetail"
             android:label="@string/title_activity_favourites_detail"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".FavouritesActivity" />
+        <activity android:name=".FavouritesActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".DetailActivity"
             android:parentActivityName=".MainActivity" />

@@ -34,6 +34,7 @@ public class FavouritesActivity extends AppCompatActivity implements LoaderManag
 
         mFavouritesAdapter = new FavouritesListAdapter(this);
         mRecyclerView.setAdapter(mFavouritesAdapter);
+        mFavouritesAdapter.notifyDataSetChanged();
 
         getSupportLoaderManager().initLoader(FAVOURITE_LOADER,null,this);
 

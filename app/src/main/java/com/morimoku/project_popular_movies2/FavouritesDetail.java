@@ -62,7 +62,7 @@ public class FavouritesDetail extends AppCompatActivity {
         textViewDate = (TextView) findViewById(R.id.textView6);
         textViewRate = (TextView) findViewById(R.id.textView7);
         imageView = (ImageView) findViewById(R.id.imageView_favourites_video);
-        description = (TextView) findViewById(R.id.FavouritesVideoListtextview);
+        //description = (TextView) findViewById(R.id.FavouritesVideoListtextview);
 
 
 
@@ -114,7 +114,7 @@ public class FavouritesDetail extends AppCompatActivity {
         textViewName.setText(title);
         textViewRate.setText(rate);
         textViewDate.setText(release);
-        description.setText(overview);
+        //description.setText(overview);
 
         Picasso.get()
                 .load(poster)
