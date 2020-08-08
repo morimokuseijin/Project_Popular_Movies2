@@ -108,7 +108,7 @@ public class DetailActivity extends AppCompatActivity {
 
         LinearLayoutManager VideoLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerViewVideoDetail.setLayoutManager(VideoLinearLayoutManager);
-        mRecyclerViewVideoDetail.setHasFixedSize(true);//TODO: have to make an adapter!
+        mRecyclerViewVideoDetail.setHasFixedSize(true);
         mRecyclerViewVideoDetail.setAdapter(mDetailActivityVideoAdapter);
 
 
