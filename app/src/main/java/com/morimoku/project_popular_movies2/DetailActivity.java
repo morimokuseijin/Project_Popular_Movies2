@@ -122,7 +122,7 @@ public class DetailActivity extends AppCompatActivity {
         
         mRecyclerViewMovieDetail.setAdapter(mRecyclerDetailAdapter);
         
-        //loadVideoData(); //TODO: Will have to add function to load data of video reputation of this video
+        loadVideoData();
         loadReviewData();
         isMovieFavourites(String.valueOf(id));
     }

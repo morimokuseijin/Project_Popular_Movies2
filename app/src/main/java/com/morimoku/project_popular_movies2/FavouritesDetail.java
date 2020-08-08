@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class FavouritesDetail extends AppCompatActivity {
 
@@ -40,13 +46,15 @@ public class FavouritesDetail extends AppCompatActivity {
     private SQLiteDatabase mDb;
     RecyclerView mRecyclerView;
     RecyclerView mRecyclerReview;
-    private DetailActivityVideoAdapter mDetailActivityVideo;
+    private DetailActivityVideoAdapter mDetailActivityVideoAdapter;
     private RecyclerDetailAdapter mRecyclerDetailAdapter;
     TextView textViewName;
     TextView textViewDate;
     TextView textViewRate;
     ImageView imageView;
     TextView description;
+    private Review[] jsonReviewData;
+    private Data[] jsonVideoData;
 
 
     @Override
@@ -62,7 +70,8 @@ public class FavouritesDetail extends AppCompatActivity {
         textViewDate = (TextView) findViewById(R.id.textView6);
         textViewRate = (TextView) findViewById(R.id.textView7);
         imageView = (ImageView) findViewById(R.id.imageView_favourites_video);
-        //description = (TextView) findViewById(R.id.FavouritesVideoListtextview);
+        description = (TextView) findViewById(R.id.favourites_video_description);
+
 
 
 
@@ -74,7 +83,7 @@ public class FavouritesDetail extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mDetailActivityVideo);
+        mRecyclerView.setAdapter(mDetailActivityVideoAdapter);
 
         mRecyclerReview = (RecyclerView) findViewById(R.id.FavouritesVideoReview);
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
@@ -112,15 +121,18 @@ public class FavouritesDetail extends AppCompatActivity {
         overview = getIntent().getStringExtra("overview");
 
         textViewName.setText(title);
-        textViewRate.setText(rate);
+        textViewRate.setText(rate + "/10");
         textViewDate.setText(release);
-        //description.setText(overview);
+        description.setText(overview);
 
         Picasso.get()
                 .load(poster)
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(imageView);
+
+        loadReviewData();
+        loadVideoData();
 
 
 
@@ -177,5 +189,77 @@ public class FavouritesDetail extends AppCompatActivity {
         );
 
     }
+    private void loadReviewData() {
+        String reviewId = String.valueOf(id);
+        new FetchReview().execute(reviewId);
 
+    }
+
+
+    private void loadVideoData() {
+        String dataId = String.valueOf(id);
+        new Execute().execute(dataId);
+
+    }
+
+    private class FetchReview extends AsyncTask<String,Void,Review[]> {
+        @Override
+        protected Review[] doInBackground(String... strings) {
+            if (strings.length == 0){
+                return null;
+            }
+            URL movieRequestUrl = UrlFactory.buildUrlReview(id);
+
+            try {
+                String jsonMovieResponse = NetworkUtils.getResponseFromHttpUrl(movieRequestUrl);
+                jsonReviewData = JsonUtils.ReviewJSONParse(FavouritesDetail.this,jsonMovieResponse);
+                return jsonReviewData;
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Review[] reviews) {
+            if (reviews != null){
+                mRecyclerDetailAdapter = new RecyclerDetailAdapter(reviews);
+                mRecyclerReview.setAdapter(mRecyclerDetailAdapter);
+            }
+        }
+    }
+
+    private class Execute extends AsyncTask<String,Void,Data[]>{
+
+
+        @Override
+        protected Data[] doInBackground(String... strings) {
+            if (strings.length == 0){
+                return null;
+            }
+            URL movieDataUrl = NetworkUtils.buildDataUrl(id);
+            try {
+                String jsonDataResponse = NetworkUtils.getResponseFromHttpUrl(movieDataUrl);
+
+                jsonVideoData = JsonUtils.getDataInformationData(FavouritesDetail.this,jsonDataResponse);
+
+                return jsonVideoData;
+
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(Data[] data) {
+            if (data != null){
+                mDetailActivityVideoAdapter = new DetailActivityVideoAdapter(data, FavouritesDetail.this);
+                mRecyclerView.setAdapter(mDetailActivityVideoAdapter);
+
+            }
+        }
+    }
 }

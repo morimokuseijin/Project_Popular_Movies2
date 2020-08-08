@@ -21,6 +21,19 @@ public class DetailActivityVideoAdapter extends RecyclerView.Adapter <DetailActi
     public DetailActivityVideoAdapter(Data[] data, Context context) {
         mVideoData = data;
         this.context = context;
+
+    }
+    class DetailVideoView extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+        public DetailVideoView(@NonNull View itemView) {
+            super(itemView);
+            mVideoDetail = itemView.findViewById(R.id.tv_video_list);
+        }
+
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 
     @NonNull
@@ -60,16 +73,5 @@ public class DetailActivityVideoAdapter extends RecyclerView.Adapter <DetailActi
         return mVideoData.length;
     }
 
-    class DetailVideoView extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public DetailVideoView(@NonNull View itemView) {
-            super(itemView);
-            mVideoDetail = itemView.findViewById(R.id.recyclerview_video_detail);
-        }
-
-        @Override
-        public void onClick(View v) {
-
-        }
-    }
 }
