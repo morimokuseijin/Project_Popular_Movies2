@@ -32,6 +32,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView mMoviePlotSynopsisDisplay;
     private RecyclerView mRecyclerViewMovieDetail;
     private RecyclerDetailAdapter mRecyclerDetailAdapter;
+    private RecyclerView mRecyclerViewVideoDetail;
+    private DetailActivityVideoAdapter mDetailActivityVideoAdapter;
     public final static String MOVIEDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w342";
     final static String API_KEY_QUERY_PARAM = "api_key";
     private int id = 0;
@@ -50,7 +52,7 @@ public class DetailActivity extends AppCompatActivity {
     private String release = "";
     private String overview = "";
     Uri mNewUri;
-
+    private Data[] jsonVideoData;
 
 
 
@@ -66,28 +68,32 @@ public class DetailActivity extends AppCompatActivity {
         mMoviePlotSynopsisDisplay = findViewById(R.id.plot_synopsis);
         mRecyclerViewMovieDetail = findViewById(R.id.recyclerview_movie_detail);
         mFloatingActionButton = findViewById(R.id.fabFavourite);
+        mRecyclerViewVideoDetail = findViewById(R.id.recyclerview_video_detail);
+
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isMovieFavourites(String.valueOf(id))){
                     removeFavourites(String.valueOf(id));
+                    Context context = getApplicationContext();
                     mFloatingActionButton.setImageResource(R.drawable.ic_android_favourite);
+                    Toast.makeText(context,"This movie was removed from your favourites list",Toast.LENGTH_LONG).show();
                 }else {
                     addToFavourites(title,id,poster,rate,release,overview);
                     Context context = getApplicationContext();
-                    Toast.makeText(context,"This movie was added to your favourites list",Toast.LENGTH_LONG).show();
                     mFloatingActionButton.setImageResource(R.drawable.ic_android_favourite_pressed);
+                    Toast.makeText(context,"This movie was added to your favourites list",Toast.LENGTH_LONG).show();
                 }
             }
         });
 
         id = getIntent().getIntExtra("id",0);
-        String poster = getIntent().getStringExtra("poster");
-        String title = getIntent().getStringExtra("title");
-        String rate = getIntent().getStringExtra("rate");
-        String release = getIntent().getStringExtra("release");
-        String overview = getIntent().getStringExtra("overview");
+        poster = getIntent().getStringExtra("poster");
+        title = getIntent().getStringExtra("title");
+        rate = getIntent().getStringExtra("rate");
+        release = getIntent().getStringExtra("release");
+        overview = getIntent().getStringExtra("overview");
 
 
         mMovieTitleDisplay.setText(title);
@@ -100,6 +106,15 @@ public class DetailActivity extends AppCompatActivity {
                 .error(R.drawable.ic_launcher_foreground)
                 .into(mMoviePosterDisplay);
 
+        LinearLayoutManager VideoLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerViewVideoDetail.setLayoutManager(VideoLinearLayoutManager);
+        mRecyclerViewVideoDetail.setHasFixedSize(true);//TODO: have to make an adapter!
+        mRecyclerViewVideoDetail.setAdapter(mDetailActivityVideoAdapter);
+
+
+
+
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerViewMovieDetail.setLayoutManager(linearLayoutManager);
 
@@ -109,10 +124,11 @@ public class DetailActivity extends AppCompatActivity {
         
         //loadVideoData(); //TODO: Will have to add function to load data of video reputation of this video
         loadReviewData();
+        isMovieFavourites(String.valueOf(id));
     }
 
     private void removeFavourites(String id) {
-        mSelectionClause = FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID + "LIKE ?";
+        mSelectionClause = FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID + " LIKE ?";
         String[] selectionArgs = new String[]{id};
 
         getContentResolver().delete(
@@ -131,17 +147,19 @@ public class DetailActivity extends AppCompatActivity {
 
 
     private void loadVideoData() {
+        String dataId = String.valueOf(id);
+        new Execute().execute(dataId);
 
     }
     private void addToFavourites(String name, int id, String poster, String rate, String release, String overview){
 
         ContentValues mContentValues = new ContentValues();
-        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID,id);
-        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_NAME,name);
-        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_POSTER,poster);
-        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_RATE,rate);
-        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_RELEASE,release);
-        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_OVERVIEW,overview);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_ID, id);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_NAME, name);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_POSTER, poster);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_RATE, rate);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_RELEASE, release);
+        mContentValues.put(FavouritesVideo.FavoritesContract.FavouritesAdd.COL_OVERVIEW, overview);
 
         mNewUri = getContentResolver().insert(
                 FavouritesVideo.FavoritesContract.FavouritesAdd.CONTENT_URI,
@@ -163,13 +181,17 @@ public class DetailActivity extends AppCompatActivity {
                 null);
         if (mCursor.getCount() <= 0){
             mCursor.close();
+            mFloatingActionButton.setImageResource(R.drawable.ic_android_favourite);
             return false;
         }
         mCursor.close();
+        mFloatingActionButton.setImageResource(R.drawable.ic_android_favourite_pressed);
         return true;
 
 
     }
+
+
 
     private class FetchReview extends AsyncTask<String,Void,Review[]>{
         @Override
@@ -194,6 +216,40 @@ public class DetailActivity extends AppCompatActivity {
             if (reviews != null){
                 mRecyclerDetailAdapter = new RecyclerDetailAdapter(reviews);
                 mRecyclerViewMovieDetail.setAdapter(mRecyclerDetailAdapter);
+            }
+        }
+    }
+
+    private class Execute extends AsyncTask<String,Void,Data[]>{
+
+
+        @Override
+        protected Data[] doInBackground(String... strings) {
+            if (strings.length == 0){
+                return null;
+            }
+            URL movieDataUrl = NetworkUtils.buildDataUrl(id);
+            try {
+                String jsonDataResponse = NetworkUtils.getResponseFromHttpUrl(movieDataUrl);
+
+                jsonVideoData = JsonUtils.getDataInformationData(DetailActivity.this,jsonDataResponse);
+
+                return jsonVideoData;
+
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(Data[] data) {
+            if (data != null){
+                mDetailActivityVideoAdapter = new DetailActivityVideoAdapter(data, DetailActivity.this);
+                mRecyclerViewVideoDetail.setAdapter(mDetailActivityVideoAdapter);
+
             }
         }
     }

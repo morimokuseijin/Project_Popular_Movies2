@@ -15,9 +15,10 @@ NetworkUtils {
 
     final static String THEMOVIEDB_BASE_URL = "https://api.themoviedb.org/3/movie";
     final static String PARAM_API_KEY = "api_key";
-    final static String apiKey = "<\"Put your API_KEY here\">";
+    final static String apiKey = "KEY HERE";
     final static String PARAM_LANGUAGE = "language";
     final static String language = "en-US";
+    final static String videos = "videos";
 
     public static URL buildUrl(String queryType){
         Uri builtUri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()
@@ -53,6 +54,24 @@ NetworkUtils {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    public static URL buildDataUrl(int id) {
+        Uri builtUri = Uri.parse(THEMOVIEDB_BASE_URL).buildUpon()
+                .appendEncodedPath(String.valueOf(id))
+                .appendEncodedPath(videos)
+                .appendQueryParameter(PARAM_API_KEY, apiKey)
+                .appendQueryParameter(PARAM_LANGUAGE, language)
+                .build();
+
+        URL url = null;
+        try{
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e){
+            e.printStackTrace();
+        }
+        return url;
+
     }
 }
 

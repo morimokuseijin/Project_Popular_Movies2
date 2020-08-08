@@ -78,5 +78,26 @@ public class JsonUtils {
 
         return reviewResult;
     }
+    public static Data[] getDataInformationData (Context context, String json) throws JSONException {
+        JSONObject dataJson = new JSONObject(json);
+
+        JSONArray dataArray = dataJson.getJSONArray("results");
+
+        Data[] dataResults = new Data[dataArray.length()];
+
+        for (int i = 0; i < dataArray.length();i++){
+            String data_key, data_name;
+            Data data = new Data();
+
+            data_key = dataArray.getJSONObject(i).optString("key");
+            data_name = dataArray.getJSONObject(i).optString("name");
+
+            data.setKey(data_key);
+            data.setName(data_name);
+
+            dataResults[i] = data;
+        }
+        return dataResults;
+    }
 
 }

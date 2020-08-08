@@ -108,7 +108,7 @@ returnCursor.setNotificationUri(getContext().getContentResolver(),uri);
         switch (match){
             case FAVOURITES:
                 long id = database.insert(TABLE_NAME,null,values);
-                if (id>0 ){
+                if (id > 0 ){
                     returnUri = ContentUris.withAppendedId(FavoritesContract.FavouritesAdd.CONTENT_URI,id);
                 }else {
                     throw new android.database.SQLException("Failed to insert row to into"+ uri);

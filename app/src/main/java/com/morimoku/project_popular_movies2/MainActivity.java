@@ -1,9 +1,5 @@
 package com.morimoku.project_popular_movies2;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,6 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.net.URL;
 
@@ -48,8 +48,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.M
 
 
     }
-public int calculateNoOfColumns(Context context) {
-    DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
+
+    public static int calculateNoOfColumns(Context context) {
+    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
     float heiWid = displayMetrics.widthPixels / displayMetrics.density;
     int noOfColumns = (int)(heiWid/180);
     return noOfColumns;
@@ -102,6 +103,12 @@ public int calculateNoOfColumns(Context context) {
         if (menuItemSelected == R.id.action_top_rated) {
             query = "top_rated";
             loadMovieData();
+            return true;
+        }
+
+        if (menuItemSelected == R.id.action_favourites){
+            Intent intent = new Intent(this,FavouritesActivity.class);
+            startActivity(intent);
             return true;
         }
 
