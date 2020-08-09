@@ -17,15 +17,15 @@ public class FavouritesActivity extends AppCompatActivity implements LoaderManag
     RecyclerView mRecyclerView;
     FavouritesListAdapter mFavouritesAdapter;
     private static final int FAVOURITE_LOADER = 77;
-    private static Bundle mBundleRecyclerViewState;
-    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle mBundle;
+    private final String KEY_RECYCLER = "recyclerview_state";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourites);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_movie_favourites);
+        mRecyclerView = findViewById(R.id.recyclerview_movie_favourites);
         int mNoOfColumns = MainActivity.calculateNoOfColumns(getApplicationContext());
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,mNoOfColumns);
@@ -46,20 +46,22 @@ public class FavouritesActivity extends AppCompatActivity implements LoaderManag
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new AsyncTaskLoader<Cursor>(this) {
-            Cursor mFavData = null;
+            Cursor mData = null;
 
             @Override
             protected void onStartLoading() {
-                if (mFavData != null){
-                    deliverResult(mFavData);
+                if (mData != null){
+                    Result(mData);
                 } else {
                     forceLoad();
                 }
             }
 
+
             @Override
             public Cursor loadInBackground() {
                 try{
+
                     return getContentResolver().query(FavouritesVideo.FavoritesContract.FavouritesAdd.CONTENT_URI,
                             null,
                             null,
@@ -71,39 +73,39 @@ public class FavouritesActivity extends AppCompatActivity implements LoaderManag
                 }
             }
 
-            public void deliverResult(Cursor data) {
-                mFavData = data;
+            public void Result(Cursor data) {
+                mData = data;
                 super.deliverResult(data);
             }
         };
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-       mFavouritesAdapter.renewData(data);
-    }
-
-
-    @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mFavouritesAdapter.renewData(null);
     }
 
-    //https://stackoverflow.com/questions/28236390/recyclerview-store-restore-state-between-activities
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        mFavouritesAdapter.renewData(data);
+    }
+
+
+    //Reference: https://stackoverflow.com/questions/28236390/recyclerview-store-restore-state-between-activities
     @Override
     protected void onPause() {
-        mBundleRecyclerViewState = new Bundle();
+        mBundle = new Bundle();
         Parcelable listState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+        mBundle.putParcelable(KEY_RECYCLER, listState);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mBundleRecyclerViewState != null) {
+        if (mBundle != null) {
             getSupportLoaderManager().restartLoader(FAVOURITE_LOADER, null, this);
-            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            Parcelable listState = mBundle.getParcelable(KEY_RECYCLER);
             mRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
         }
     }
